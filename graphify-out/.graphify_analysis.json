@@ -1,0 +1,237 @@
+{
+  "communities": {
+    "0": [
+      "js_storage",
+      "js_storage_backupjsondata",
+      "js_storage_downloadjson",
+      "js_storage_entrymatcheskey",
+      "js_storage_exportcsvdata",
+      "js_storage_getlastperformance",
+      "js_storage_getlastsessionbykey",
+      "js_storage_getworkoutlogs",
+      "js_storage_importbackupfile",
+      "js_storage_markbackedup",
+      "js_storage_needsbackupreminder",
+      "js_storage_saveworkoutlog",
+      "js_storage_showtoast",
+      "js_storage_snoozebackupreminder"
+    ],
+    "1": [
+      "js_chart",
+      "js_chart_allmovementkeys",
+      "js_chart_collectkeypoints",
+      "js_chart_epley",
+      "js_chart_fmtaxis",
+      "js_chart_fmtid",
+      "js_chart_keylabels",
+      "js_chart_lasttipinfo",
+      "js_chart_parsenumsafe",
+      "js_chart_renderchart",
+      "js_chart_renderchartmeta",
+      "js_chart_setchartmetric",
+      "js_chart_setupchartoptions"
+    ],
+    "2": [
+      "js_workout",
+      "js_workout_bwofentry",
+      "js_workout_currentworkoutstate",
+      "js_workout_finishworkout",
+      "js_workout_isdbpart",
+      "js_workout_localisodate",
+      "js_workout_newsessionid",
+      "js_workout_parsenum",
+      "js_workout_rotation_order",
+      "js_workout_updatebodyweight",
+      "js_workout_updatesetdata"
+    ],
+    "3": [
+      "js_progress",
+      "js_progress_deletesession",
+      "js_progress_esc",
+      "js_progress_formatdateid",
+      "js_progress_inittab",
+      "js_progress_renderbackupreminder",
+      "js_progress_renderhistorylist",
+      "js_progress_switchtab"
+    ],
+    "4": [
+      "js_workout_bestofsets",
+      "js_workout_checkprogression",
+      "js_workout_isexercisesuperset",
+      "js_workout_isstagnant",
+      "js_workout_renderexercisecardhtml",
+      "js_workout_renderrotationhint",
+      "js_workout_renderuifromstate"
+    ],
+    "5": [
+      "js_workout_changevariation",
+      "js_workout_savedraftworkout",
+      "js_workout_updatelastperfdisplay",
+      "js_workout_updatelimit",
+      "js_workout_updatenote",
+      "js_workout_updaterir"
+    ],
+    "6": [
+      "js_timer",
+      "js_timer_resumetimer",
+      "js_timer_starttimer",
+      "js_timer_starttimer_updatedisplay",
+      "js_timer_stoptimer"
+    ],
+    "7": [
+      "js_workout_loaddayworkout",
+      "js_workout_renderdaybuttons",
+      "js_workout_togglelightweek"
+    ],
+    "8": [
+      "js_data",
+      "js_data_workout_program"
+    ],
+    "9": [
+      "sw",
+      "sw_assets"
+    ],
+    "10": [
+      "js_seed"
+    ]
+  },
+  "cohesion": {
+    "0": 0.3076923076923077,
+    "1": 0.28205128205128205,
+    "2": 0.2909090909090909,
+    "3": 0.4642857142857143,
+    "4": 0.38095238095238093,
+    "5": 0.3333333333333333,
+    "6": 0.7,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0,
+    "10": 1.0
+  },
+  "gods": [
+    {
+      "id": "js_storage_getworkoutlogs",
+      "label": "getWorkoutLogs()",
+      "degree": 8
+    },
+    {
+      "id": "js_workout_renderuifromstate",
+      "label": "renderUIFromState()",
+      "degree": 7
+    },
+    {
+      "id": "js_workout_savedraftworkout",
+      "label": "saveDraftWorkout()",
+      "degree": 7
+    },
+    {
+      "id": "js_chart_renderchart",
+      "label": "renderChart()",
+      "degree": 6
+    },
+    {
+      "id": "js_progress_renderhistorylist",
+      "label": "renderHistoryList()",
+      "degree": 6
+    },
+    {
+      "id": "js_workout_loaddayworkout",
+      "label": "loadDayWorkout()",
+      "degree": 6
+    },
+    {
+      "id": "js_storage_backupjsondata",
+      "label": "backupJSONData()",
+      "degree": 5
+    },
+    {
+      "id": "js_workout_finishworkout",
+      "label": "finishWorkout()",
+      "degree": 5
+    },
+    {
+      "id": "js_workout_checkprogression",
+      "label": "checkProgression()",
+      "degree": 5
+    },
+    {
+      "id": "js_workout_renderdaybuttons",
+      "label": "renderDayButtons()",
+      "degree": 5
+    }
+  ],
+  "surprises": [
+    {
+      "source": "loadDayWorkout()",
+      "target": "newSessionId()",
+      "source_files": [
+        "js/workout.js",
+        "js/workout.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 2 → community 7"
+    },
+    {
+      "source": "updateSetData()",
+      "target": "checkProgression()",
+      "source_files": [
+        "js/workout.js",
+        "js/workout.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 2 → community 4"
+    },
+    {
+      "source": "updateSetData()",
+      "target": "saveDraftWorkout()",
+      "source_files": [
+        "js/workout.js",
+        "js/workout.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 2 → community 5"
+    },
+    {
+      "source": "loadDayWorkout()",
+      "target": "renderUIFromState()",
+      "source_files": [
+        "js/workout.js",
+        "js/workout.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 4 → community 7"
+    },
+    {
+      "source": "renderUIFromState()",
+      "target": "updateLastPerfDisplay()",
+      "source_files": [
+        "js/workout.js",
+        "js/workout.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 4 → community 5"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `saveDraftWorkout()` connect `saveDraftWorkout` to `workout.js`, `loadDayWorkout`?",
+      "why": "High betweenness centrality (0.003) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `lastTipInfo`, `currentWorkoutState`, `ROTATION_ORDER` to the rest of the system?",
+      "why": "5 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `renderUIFromState()` connect `renderUIFromState` to `workout.js`, `saveDraftWorkout`, `loadDayWorkout`?",
+      "why": "High betweenness centrality (0.003) - this node is a cross-community bridge."
+    }
+  ]
+}

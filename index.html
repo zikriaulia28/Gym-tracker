@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#07100b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>GYMTracker — Latihan lebih terarah</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/vendor/chart.umd.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#exercise-list">Lewati ke latihan</a>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <button class="brand" type="button" onclick="switchTab('workout')" aria-label="Buka Latihan">
+        <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8h11M5 5.25v5.5M11 5.25v5.5M1.75 6.5v3M14.25 6.5v3"/></svg></span>
+        <span>GYM<span>Tracker</span></span>
+      </button>
+    </div>
+    <nav class="top-tabs" aria-label="Navigasi utama">
+      <button class="tab-btn active" onclick="switchTab('workout')">Latihan</button>
+      <button class="tab-btn" onclick="switchTab('history')">Riwayat</button>
+      <button class="tab-btn" onclick="switchTab('chart')">Progress</button>
+      <button class="tab-btn" onclick="switchTab('guide')">Panduan</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- LATIHAN -->
+    <section id="tab-workout" class="tab-content active">
+      <div class="quick-grid">
+        <div class="quick-card mode-card">
+          <div class="quick-icon" aria-hidden="true"><svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3.25"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M12.6 3.4l-1.1 1.1M4.5 11.5l-1.1 1.1"/></svg></div>
+          <div class="quick-copy">
+            <span>Mode Minggu Ringan</span>
+            <strong>3 Hari · 2 Set</strong>
+          </div>
+          <label class="switch" aria-label="Aktifkan mode minggu ringan">
+            <input type="checkbox" id="light-week-toggle" onchange="toggleLightWeek()">
+            <span></span>
+          </label>
+        </div>
+        <label class="quick-card body-card" for="body-weight">
+          <div class="quick-icon" aria-hidden="true"><svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="11" height="11" rx="2.5"/><path d="M5 6.5a3 3 0 0 1 6 0"/><path d="M8 6.5l1.4-1.6"/></svg></div>
+          <div class="quick-copy"><span>BB pagi</span><strong><input type="text" id="body-weight" class="compact-field" placeholder="76,5" inputmode="decimal" oninput="updateBodyWeight(this.value)"> <small>kg</small></strong></div>
+        </label>
+      </div>
+
+      <div id="rotation-hint" class="next-panel" role="status"><span class="next-label">BERIKUTNYA</span></div>
+
+      <div class="section-heading">
+        <div><span class="eyebrow">PROGRAM</span><h3>Hari Latihan</h3></div>
+        <span class="section-meta" id="workout-count">1/3 →</span>
+      </div>
+      <div class="day-selector" id="day-buttons"></div>
+
+      <div id="exercise-list" class="exercise-list" tabindex="-1"></div>
+    </section>
+
+    <!-- RIWAYAT -->
+    <section id="tab-history" class="tab-content">
+      <div class="page-heading">
+        <div><span class="eyebrow">LOG</span><h2>Riwayat Latihan</h2><p>Performa tersimpan dari setiap sesi.</p></div>
+      </div>
+      <div id="history-overview" class="metric-grid">
+        <div class="metric-card"><span>Total Sesi</span><strong id="metric-sessions">0</strong></div>
+        <div class="metric-card"><span>Total Latihan</span><strong id="metric-exercises">0</strong></div>
+        <div class="metric-card"><span>Durasi Rata-rata</span><strong id="metric-duration">—</strong></div>
+      </div>
+      <div class="backup-actions">
+        <button class="btn-secondary" type="button" onclick="backupJSONData()">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8m0-8L5 5m3-3 3 3"/><path d="M2.5 10.5v2.75a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2.75"/></svg>
+          <span>Backup JSON</span>
+        </button>
+        <button class="btn-secondary" type="button" onclick="exportCSVData()">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10V2m0 8 3-3m-3 3L5 7"/><path d="M2.5 10.5v2.75a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2.75"/></svg>
+          <span>Ekspor CSV</span>
+        </button>
+        <label class="btn-secondary" for="restore-file" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); document.getElementById('restore-file').click(); }">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10V2m0 8 3-3m-3 3L5 7"/><path d="M2.5 5.5v-1a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1"/></svg>
+          <span>Restore JSON</span>
+        </label>
+        <input type="file" id="restore-file" accept="application/json,.json" hidden onchange="importBackupFile(this)">
+      </div>
+      <div id="backup-reminder" class="backup-banner hidden"></div>
+      <div id="history-list" class="history-list"></div>
+    </section>
+
+    <!-- PROGRESS -->
+    <section id="tab-chart" class="tab-content">
+      <div class="page-heading chart-heading">
+        <div><span class="eyebrow">ANALYTICS</span><h2>Progress Latihan</h2><p>Lihat kekuatan dan volume dari waktu ke waktu.</p></div>
+        <div class="chart-select-wrap"><label for="chart-exercise-select">Gerakan</label><select id="chart-exercise-select" onchange="renderChart()"></select></div>
+      </div>
+      <div class="chart-switch" aria-label="Metrik grafik"><button class="active" type="button" data-metric="e1rm" onclick="setChartMetric('e1rm')">1RM (Epley)</button><button type="button" data-metric="volume" onclick="setChartMetric('volume')">Volume</button></div>
+      <div id="chart-verdict" class="last-perf" style="margin:10px 0;"></div>
+      <div class="chart-container"><canvas id="progressChart"></canvas></div>
+      <div id="chart-gap-note" class="exercise-meta" style="display:none; margin-top:8px;">Garis putus = ganti variasi, disengaja.</div>
+      <div class="metric-grid progress-metrics">
+        <div class="metric-card wide"><span>e1RM Terbaik</span><strong id="metric-best-e1rm">—</strong><small id="metric-best-date">Belum ada data</small></div>
+        <div class="metric-card wide"><span>Volume Total</span><strong id="metric-total-volume">—</strong><small id="metric-volume-change">—</small></div>
+      </div>
+    </section>
+
+    <!-- PANDUAN -->
+    <section id="tab-guide" class="tab-content">
+      <div class="page-heading"><div><span class="eyebrow">KNOWLEDGE</span><h2>Panduan Penggunaan</h2><p>Ringkas, praktis, dan relevan saat latihan.</p></div></div>
+      <div class="guide-grid">
+        <article class="guide-card"><div class="guide-icon">R</div><div><h3>RIR</h3><span>Reps in Reserve</span><p>Sisa repetisi yang masih bisa dilakukan sebelum gagal. RIR 2 berarti masih kuat sekitar 2 rep.</p></div></article>
+        <article class="guide-card"><div class="guide-icon">L</div><div><h3>Limit</h3><span>Pembatas Set</span><p>Catat bila berhenti karena ROM, grip, keseimbangan, atau faktor lain — bukan karena kekuatan.</p></div></article>
+        <article class="guide-card"><div class="guide-icon">S</div><div><h3>Superset</h3><span>Dua gerakan berurutan</span><p>Gunakan pasangan input yang tersedia untuk mencatat kedua gerakan dalam satu set.</p></div></article>
+        <article class="guide-card"><div class="guide-icon">↑</div><div><h3>Progressive Overload</h3><span>Beban · Repetisi · Kualitas</span><p>Aplikasi memberi saran progresi ketika target repetisi tercapai atau performa stagnan.</p></div></article>
+        <article class="guide-card guide-wide"><div class="guide-icon">↗</div><div><h3>e1RM & Volume</h3><span>Dua angka utama di Progress</span><p>e1RM memakai rumus Epley. Volume membaca total kerja dari beban × repetisi × faktor dumbbell.</p></div></article>
+        <article class="guide-card guide-wide"><div class="guide-icon">☁</div><div><h3>Backup & Restore</h3><span>Data tetap aman di perangkat</span><p>Data latihan tersimpan lokal. Backup JSON secara berkala sebelum pindah perangkat atau browser.</p></div></article>
+        <article class="guide-card"><div class="guide-icon">P</div><div><h3>RPE</h3><span>Skala 1–10</span><p>RPE = 10 − RIR. RPE 8 ≈ RIR 2. Tulis di catatan bila lebih nyaman dari RIR.</p></div></article>
+        <article class="guide-card guide-wide"><div class="guide-icon">W</div><div><h3>Warm-up</h3><span>Compound saja · ±3 menit</span><p>Rumus: <strong>50%×10, 70%×5, 85%×3</strong> dari beban kerja.</p><ul><li>Bench 50 kg → 25×10, 35×5, 42,5×3</li><li>Smith squat 47 kg → 20×10, 32,5×5, 40×3</li><li>Bulatkan ke beban terdekat; isolasi tidak perlu warm-up</li></ul></div></article>
+        <article class="guide-card guide-wide"><div class="guide-icon">▲</div><div><h3>Aturan Progresi</h3><span>Kapan naik beban</span><p>Mulai dari batas bawah range, tambah 1 rep per sesi.</p><ul><li>Naik beban: semua set di batas atas</li><li>Naik beban: 2 dari 3 set di batas atas, beban sama</li><li>Naik beban: set terbaik sama 2 sesi berturut-turut</li><li>Badge = “naikkan beban sesi berikutnya”</li><li>Gagal batas bawah 2 sesi → turunkan 5–10%</li></ul></div></article>
+        <article class="guide-card guide-wide"><div class="guide-icon">⇄</div><div><h3>Variasi & Grafik</h3><span>Ganti alat tidak memutus data</span><ul><li>Riwayat mengikuti fungsi otot, bukan nama alat</li><li>Garis putus saat ganti variasi = disengaja</li><li>Tujuannya: tidak tampil regresi palsu</li></ul></div></article>
+        <article class="guide-card"><div class="guide-icon">↻</div><div><h3>Rotasi</h3><span>2 Upper : 2 Lower</span><p>Urutan: Upper A → Lower A → Upper B → Lower B. Hanya bisa 3 sesi? Lewati Lower B.</p></div></article>
+        <article class="guide-card"><div class="guide-icon">◐</div><div><h3>Minggu Ringan</h3><span>Deload tiap 6–8 minggu</span><p>Aktifkan toggle di tab Latihan: semua gerakan jadi 2 set. Tetap catat seperti biasa.</p></div></article>
+        <article class="guide-card guide-wide"><div class="guide-icon">◷</div><div><h3>Istirahat & Timer</h3><span>Compound lama, isolasi pendek</span><ul><li>Compound 2–3 menit, isolasi 60–90 detik</li><li>Angka persis tampil di tiap kartu — tekan Timer tiap selesai set</li><li>Alat occupied &gt; 90 detik → pindah alternatif, timer tetap jalan</li></ul></div></article>
+        <article class="guide-card guide-wide"><div class="guide-icon">⚖</div><div><h3>Timbang & Nutrisi</h3><span>Ukur dengan protokol sama</span><ul><li>Timbang pagi sebelum makan, 3×/minggu</li><li>2.200 kcal · protein 160 g · lemak 70 g · karbo 232 g</li><li>Air 2,5–3 L · serat 35 g · 9.000 langkah/hari</li><li>Lingkar perut mingguan, kondisi sama</li></ul></div></article>
+        <article class="guide-card"><div class="guide-icon">A/B</div><div><h3>Baca Superset</h3><span>Dua kolom, satu set</span><p>Kolom A dan B = dua gerakan berurutan tanpa istirahat. RIR dan catatan diisi per kartu (berlaku untuk keduanya).</p></div></article>
+        <article class="guide-card guide-wide"><div class="guide-icon">≡</div><div><h3>Glosarium</h3><span>Istilah gym singkat</span><ul><li>Rep = 1 pengulangan · Set = 1 rangkaian rep</li><li>Failure = tidak bisa 1 rep lagi · ROM = rentang gerak penuh</li><li>PR = rekor pribadi · Plateau = mentok 2+ sesi</li><li>Deload = minggu ringan · Compound = multi-sendi · Isolasi = satu otot</li><li>Tempo 3-0-1 = 3 dtk turun, 0 tahan, 1 dtk angkat</li></ul></div></article>
+      </div>
+    </section>
+  </main>
+
+  <div class="actionbar">
+    <div class="actionbar-inner">
+      <div id="timer-bar" class="timer-bar hidden" role="status">
+        <span>Istirahat <strong class="timer-num" id="timer-display">00:00</strong></span>
+        <button onclick="stopTimer()">Batal</button>
+      </div>
+      <button id="save-workout-btn" class="btn-primary hidden" onclick="finishWorkout()">Simpan Sesi</button>
+    </div>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Navigasi mobile">
+    <button class="mobile-tab-btn active" data-tab="workout" onclick="switchTab('workout')"><span><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5v3M4.5 4.75v6.5M11.5 4.75v6.5M13.5 6.5v3M4.5 8h7"/></svg></span><small>Latihan</small></button>
+    <button class="mobile-tab-btn" data-tab="history" onclick="switchTab('history')"><span><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 4.5h8M5.5 8h8M5.5 11.5h8M2.6 4.5h.01M2.6 8h.01M2.6 11.5h.01"/></svg></span><small>Riwayat</small></button>
+    <button class="mobile-tab-btn" data-tab="chart" onclick="switchTab('chart')"><span><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 13.5h11M5 13.5V9M8 13.5V4.5M11 13.5V7"/></svg></span><small>Progress</small></button>
+    <button class="mobile-tab-btn" data-tab="guide" onclick="switchTab('guide')"><span><svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4.7C6.6 3.5 4.7 3 2.5 3v9c2.2 0 4.1.5 5.5 1.7 1.4-1.2 3.3-1.7 5.5-1.7V3c-2.2 0-4.1.5-5.5 1.7zM8 4.7v9"/></svg></span><small>Panduan</small></button>
+  </nav>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/seed.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/workout.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/chart.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(e => console.error("SW gagal:", e)));
+    }
+  </script>
+</body>
+</html>
